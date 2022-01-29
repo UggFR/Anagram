@@ -1,0 +1,91 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fullpage}
+\usepackage[french]{babel}
+\usepackage{listings}
+\usepackage{parskip}
+\usepackage{url}
+
+\lstset{language=C++,basicstyle=\small\tt,showstringspaces=false}
+
+\title{\vspace{-2cm}Base du Développement Logiciel}
+
+\begin{document}
+\maketitle
+
+Une \emph{anagramme} est une permutation des lettres d'un mot pour
+obtenir un nouveau mot. Par exemple, les mots \emph{onirique} et
+\emph{ironique} ayant les mêmes lettres avec le même nombre d'occurrences
+(un \emph{n}, deux \emph{i}, etc), ce sont des anagrammes l'un de
+l'autre.
+
+\section{Détection d'anagramme}
+
+Définissez une fonction \lstinline|std::string normalize(std::string const &)|
+ayant la spécification suivante : la chaîne renvoyée doit être la même
+pour toutes les anagrammes du mot passé en argument ; elle doit être
+différente pour deux mots qui ne sont pas des anagrammes.
+Par exemple, \lstinline|"eiinoqru"| est une forme normale convenable pour
+\emph{onirique} et \emph{ironique} (d'autres façons de normaliser sont
+possibles). Indice: jeter un oeil à \texttt{std::sort}.\\
+
+Utilisez cette fonction pour définir une fonction prenant deux chaînes de
+caractères en argument et renvoyant \lstinline|true| si ces deux chaînes
+sont anagrammes l'une de l'autre.\\
+
+Testez votre fonction sur quelques exemples.
+
+\section{Chargement de mots}
+
+Définissez une fonction \lstinline|std::vector<std::string> load()| qui
+lit le fichier \texttt{words.txt} fourni avec le sujet et renvoie un vecteur de chaînes de caractères contenant
+un mot par case. Vous utiliserez préférentiellement \texttt{std::getline(std::istream\&, std::string \&)}
+pour effectuer la lecture du fichier depuis un \texttt{std::ifstream}.\\
+
+Testez votre fonction en affichant la longueur du vecteur (le nombre de
+mots lus) ainsi que le dernier mot. (Note: le \emph{zizzyva} est un
+coléoptère tropical.)
+
+\section{Construction de dictionnaire}
+
+L'objectif est maintenant de construire un dictionnaire permettant
+d'inverser la fonction \lstinline|normalize|. Autrement dit, pour toute
+chaîne \lstinline|s|, une expression ressemblant
+à \lstinline|dict[normalize(s)]| doit permettre de retrouver la valeur
+\lstinline|s|. Utilisez pour cela le conteneur
+\lstinline|std::multimap| qui est une table de hachage à valeurs multiples:
+\begin{lstlisting}
+typedef std::multimap<std::string, std::string> dictionary;
+\end{lstlisting}
+
+Question : pourquoi est-ce que \lstinline|std::map| ne convient pas ?
+
+Définissez une fonction
+\lstinline|dictionary convert(std::vector<std::string> const &)| qui crée
+et remplit un dictionnaire à l'aide des mots passés en argument.
+
+Note : \lstinline|std::multimap::insert| prend en argument une
+paire formée de la clé et de la valeur associée.
+
+\section{Liste des anagrammes d'un mot}
+
+Définissez une fonction qui renvoie toutes les anagrammes d'un mot (excepté
+lui-même) présentes dans un dictionnaire :
+\begin{lstlisting}
+std::vector<std::string> anagrams(dictionary const &, std::string const &);
+\end{lstlisting}
+
+Note : la méthode \lstinline|equal_range| de
+\lstinline|std::multimap| renvoie une paire d'itérateurs qui
+délimitent la zone contenant toutes les entrées d'un dictionnaire ayant
+la même clé.
+
+Testez votre fonction en affichant les anagrammes des mots suivants (ou
+un message d'erreur le cas échéant) :
+\begin{lstlisting}
+char const *test_words[] =
+  { "anagram", "parrot", "abba", "insert", "silent" };
+\end{lstlisting}
+
+\end{document}
